@@ -8,6 +8,7 @@ namespace MovieBuddy.Models
     public class Movie
     {
         public string Name { get; set; }
-        public List<string> Genre { get; set; }
+        public List<string> Genres { get; set; }
+        public float Rating { get; set; }
     }
 }

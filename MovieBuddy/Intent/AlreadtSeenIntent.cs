@@ -26,16 +26,16 @@ namespace MovieBuddy.Intent
             }
             SkillRequest = skillRequest;
             var movie = MovieService.Get(null, previousMovie);
-            SuccessResponse = "Alright. What then about " + movie;
+            SuccessResponse = "Alright. What then about " + movie.Name + ". It has " + movie.Rating + " rating and is part of top 250 IMDB list";
             if (skillRequest.Session.Attributes.IsNull())
             {
                 var dictionary = new Dictionary<string, object>();
-                dictionary["previousMovie"] = movie;
+                dictionary["previousMovie"] = movie.Name;
                 skillRequest.Session.Attributes = dictionary;
             }
             else
             {
-                skillRequest.Session.Attributes["previousMovie"] = movie;
+                skillRequest.Session.Attributes["previousMovie"] = movie.Name;
             }
         }
         public bool ParseAndValidate()

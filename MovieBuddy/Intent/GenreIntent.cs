@@ -33,17 +33,17 @@ namespace MovieBuddy.Intent
             }
             else
             {
-                SuccessResponse = "Famous movie in genre " + genre + " is " + movie;
+                SuccessResponse = "Famous movie in genre " + genre + " is " + movie.Name + ". It has " + movie.Rating + " rating and is part of top 250 IMDB list";
             }
             if (skillRequest.Session.Attributes.IsNull())
             {
                 var dictionary = new Dictionary<string, object>();
-                dictionary["previousMovie"] = movie;
+                dictionary["previousMovie"] = movie.Name;
                 skillRequest.Session.Attributes = dictionary;
             }
             else
             {
-                skillRequest.Session.Attributes["previousMovie"] = movie;
+                skillRequest.Session.Attributes["previousMovie"] = movie.Name;
             }
         }
         public bool ParseAndValidate()

@@ -11,15 +11,15 @@ namespace MovieBuddy.Services
     {
         private static List<Movie> _movies = new List<Movie>
         {
-            new Movie { Name = "The Shawshank Redemption", Genre = new List<string> { "crime", "drama" } },
-            new Movie { Name = "The Godfather", Genre = new List<string> { "crime", "drama" } },
-            new Movie { Name = "The Dark Knight", Genre = new List<string> { "action", "crime", "drama", "thriller" } },
-            new Movie { Name = "Pulp Fiction", Genre = new List<string> { "crime", "drama" } },
-            new Movie { Name = "The Matrix", Genre = new List<string> { "action", "adventure", "sci-fi", "thriller" } },
-            new Movie { Name = "Inception", Genre = new List<string> { "action", "adventure", "sci-fi", "thriller" } },
+            new Movie { Name = "The Shawshank Redemption", Genres = new List<string> { "crime", "drama" }, Rating = 9.2f },
+            new Movie { Name = "The Godfather", Genres = new List<string> { "crime", "drama" }, Rating = 9.2f },
+            new Movie { Name = "The Dark Knight", Genres = new List<string> { "action", "crime", "drama", "thriller" }, Rating = 8.9f },
+            new Movie { Name = "Pulp Fiction", Genres = new List<string> { "crime", "drama" }, Rating = 8.9f },
+            new Movie { Name = "The Matrix", Genres = new List<string> { "action", "adventure", "sci-fi", "thriller" }, Rating = 8.7f },
+            new Movie { Name = "Inception", Genres = new List<string> { "action", "adventure", "sci-fi", "thriller" }, Rating = 8.7f },
         };
 
-        public static string Get(string genre = null, string previousMovie = null)
+        public static Movie Get(string genre = null, string previousMovie = null)
         {
             var length = 0;
             List<Movie> filteredList;
@@ -30,7 +30,7 @@ namespace MovieBuddy.Services
             }
             else
             {
-                filteredList = _movies.Where(t => t.Genre.Contains(genre) && t.Name != previousMovie).ToList();
+                filteredList = _movies.Where(t => t.Genres.Contains(genre) && t.Name != previousMovie).ToList();
                 length = filteredList.Count();
             }
             if (length == 0)
@@ -38,7 +38,7 @@ namespace MovieBuddy.Services
                 return null;
             }
             var index = new Random().Next(0, length);
-            return filteredList[index].Name;
+            return filteredList[index];
         }
     }
 }
