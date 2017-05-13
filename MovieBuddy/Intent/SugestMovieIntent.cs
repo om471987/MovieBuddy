@@ -1,6 +1,8 @@
-﻿using MovieBuddy.Services;
+﻿using MovieBuddy.Helper;
+using MovieBuddy.Services;
 using Slight.Alexa.Framework.Models.Requests;
 using Slight.Alexa.Framework.Models.Responses;
+using System.Collections.Generic;
 
 namespace MovieBuddy.Intent
 {
@@ -14,8 +16,24 @@ namespace MovieBuddy.Intent
         public string CardContent { get; set; }
         public SugestMovieIntent(SkillRequest skillRequest)
         {
+            string previousMovie = null;
+            if (skillRequest.Session.Attributes.IsNotNull() && skillRequest.Session.Attributes.ContainsKey("previousMovie"))
+            {
+                previousMovie = (string)skillRequest.Session.Attributes["previousMovie"];
+            }
             SkillRequest = skillRequest;
-            SuccessResponse = "I want to suggest you movie " + MovieService.Get();
+            var movie = MovieService.Get(null, previousMovie);
+            SuccessResponse = "I want to suggest you movie " + movie;
+            if (skillRequest.Session.Attributes.IsNull())
+            {
+                var dictionary = new Dictionary<string, object>();
+                dictionary["previousMovie"] = movie;
+                skillRequest.Session.Attributes = dictionary;
+            }
+            else
+            {
+                skillRequest.Session.Attributes["previousMovie"] = movie;
+            }
         }
         public bool ParseAndValidate()
         {

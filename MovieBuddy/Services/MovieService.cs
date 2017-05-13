@@ -19,25 +19,26 @@ namespace MovieBuddy.Services
             new Movie { Name = "Inception", Genre = new List<string> { "action", "adventure", "sci-fi", "thriller" } },
         };
 
-        public static string Get(string genre = null)
+        public static string Get(string genre = null, string previousMovie = null)
         {
+            var length = 0;
+            List<Movie> filteredList;
             if (genre.IsNull())
             {
-                var length = _movies.Count();
-                var index = new Random().Next(0, length);
-                return _movies[index].Name;
+                filteredList = _movies.Where(t => t.Name != previousMovie).ToList();
+                length = _movies.Count();
             }
             else
             {
-                var filteredList = _movies.Where(t => t.Genre.Contains(genre)).ToList();
-                var length = filteredList.Count();
-                if (length == 0)
-                {
-                    return null;
-                }
-                var index = new Random().Next(0, length);
-                return filteredList[index].Name;
+                filteredList = _movies.Where(t => t.Genre.Contains(genre) && t.Name != previousMovie).ToList();
+                length = filteredList.Count();
             }
+            if (length == 0)
+            {
+                return null;
+            }
+            var index = new Random().Next(0, length);
+            return filteredList[index].Name;
         }
     }
 }

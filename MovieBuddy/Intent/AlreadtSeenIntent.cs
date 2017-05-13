@@ -1,4 +1,5 @@
-﻿using MovieBuddy.Services;
+﻿using MovieBuddy.Helper;
+using MovieBuddy.Services;
 using Slight.Alexa.Framework.Models.Requests;
 using Slight.Alexa.Framework.Models.Responses;
 using System;
@@ -18,10 +19,24 @@ namespace MovieBuddy.Intent
         public string CardContent { get; set; }
         public AlreadtSeenIntent(SkillRequest skillRequest)
         {
+            string previousMovie = null;
+            if (skillRequest.Session.Attributes.IsNotNull() && skillRequest.Session.Attributes.ContainsKey("previousMovie"))
+            {
+                previousMovie = (string) skillRequest.Session.Attributes["previousMovie"];
+            }
             SkillRequest = skillRequest;
-            SuccessResponse = "Alright. What then about " + MovieService.Get();
-            CardTitle = "Version";
-            CardContent = "";
+            var movie = MovieService.Get(null, previousMovie);
+            SuccessResponse = "Alright. What then about " + movie;
+            if (skillRequest.Session.Attributes.IsNull())
+            {
+                var dictionary = new Dictionary<string, object>();
+                dictionary["previousMovie"] = movie;
+                skillRequest.Session.Attributes = dictionary;
+            }
+            else
+            {
+                skillRequest.Session.Attributes["previousMovie"] = movie;
+            }
         }
         public bool ParseAndValidate()
         {
@@ -38,11 +53,6 @@ namespace MovieBuddy.Intent
                     OutputSpeech = new PlainTextOutputSpeech
                     {
                         Text = SuccessResponse
-                    },
-                    Card = new SimpleCard
-                    {
-                        Title = CardTitle,
-                        Content = CardContent
                     }
                 },
                 SessionAttributes = SkillRequest.Session.Attributes
